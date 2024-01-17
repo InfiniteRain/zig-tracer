@@ -15,7 +15,7 @@ pub fn main() !void {
     defer tracer.deinit();
 
     // main loop
-    var go = false;
+    const go = false;
     while (go) {
         try tracer.init_thread(std.fs.cwd());
         defer tracer.deinit_thread();
