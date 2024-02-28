@@ -1,6 +1,11 @@
 const std = @import("std");
 const root = @import("root");
-const impl = std.meta.globalOption("tracer_impl", type) orelse none;
+const impl: type = blk: {
+    if (!@hasDecl(root, "tracer_impl")) {
+        break :blk none;
+    }
+    break :blk @field(root, "tracer_impl");
+};
 
 threadlocal var started = false;
 
