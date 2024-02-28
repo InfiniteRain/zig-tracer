@@ -1,0 +1,9 @@
+.{
+    .name = "zig-tracer",
+    .version = "0.1.0",
+    .paths = .{
+        "src",
+        "build.zig",
+    },
+    .dependencies = .{},
+}
