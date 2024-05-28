@@ -4,7 +4,7 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const mode = b.option(std.builtin.Mode, "mode", "") orelse .Debug;
 
-    const mod = b.addModule("tracer", .{ .root_source_file = .{ .path = "src/mod.zig" } });
+    const mod = b.addModule("tracer", .{ .root_source_file = b.path("src/mod.zig") });
 
     addTest(b, target, mode, mod, 0);
     addTest(b, target, mode, mod, 1);
@@ -22,7 +22,7 @@ fn addTest(b: *std.Build, target: std.Build.ResolvedTarget, mode: std.builtin.Mo
 
     const exe = b.addExecutable(.{
         .name = "test" ++ std.fmt.comptimePrint("{d}", .{backend}),
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = mode,
     });
