@@ -2,20 +2,30 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
-    const mode = b.option(std.builtin.Mode, "mode", "") orelse .Debug;
+    const optimize = b.standardOptimizeOption(.{});
 
-    const mod = b.addModule("tracer", .{ .root_source_file = b.path("src/mod.zig") });
+    const mod = b.addModule("tracer", .{
+        .root_source_file = b.path("src/mod.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
 
-    addTest(b, target, mode, mod, 0);
-    addTest(b, target, mode, mod, 1);
-    addTest(b, target, mode, mod, 2);
-    addTest(b, target, mode, mod, 3);
+    addTest(b, target, optimize, mod, 0);
+    addTest(b, target, optimize, mod, 1);
+    addTest(b, target, optimize, mod, 2);
+    addTest(b, target, optimize, mod, 3);
 
     const test_step = b.step("test", "dummy test step to pass CI checks");
     _ = test_step;
 }
 
-fn addTest(b: *std.Build, target: std.Build.ResolvedTarget, mode: std.builtin.Mode, mod: *std.Build.Module, comptime backend: u8) void {
+fn addTest(
+    b: *std.Build,
+    target: std.Build.ResolvedTarget,
+    mode: std.builtin.OptimizeMode,
+    mod: *std.Build.Module,
+    comptime backend: u8,
+) void {
     const options = b.addOptions();
     options.addOption(usize, "src_file_trimlen", std.fs.path.dirname(std.fs.path.dirname(@src().file).?).?.len);
     options.addOption(u8, "backend", backend);
