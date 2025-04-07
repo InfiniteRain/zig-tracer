@@ -45,7 +45,7 @@ pub inline fn trace_begin(ctx: tracer.Ctx, comptime ifmt: []const u8, iargs: any
         \\
     ,
         .{
-            if (ctx.src.file[0] == '/') ctx.src.file,
+            ctx.src.file,
             ctx.src.line,
             ctx.src.column,
             ctx.src.fn_name,
