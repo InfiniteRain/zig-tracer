@@ -1,18 +1,10 @@
 const std = @import("std");
 const root = @import("root");
-const impl: type = blk: {
-    if (!@hasDecl(root, "tracer_impl")) {
-        break :blk none;
-    }
-    break :blk @field(root, "tracer_impl");
-};
+const impl = chrome;
 
 threadlocal var started = false;
 
-pub const none = @import("./none.zig");
-pub const log = @import("./log.zig");
 pub const chrome = @import("./chrome.zig");
-pub const spall = @import("./spall.zig");
 
 pub fn init() !void {
     try impl.init();
