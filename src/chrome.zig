@@ -33,7 +33,7 @@ pub inline fn trace_begin(ctx: tracer.Ctx, comptime ifmt: []const u8, iargs: any
     buffered_writer.writer().print(
         \\{{"cat":"function", "name":"{s}:{d}:{d} ({s})
     ++ ifmt ++
-        \\", "ph": "B", "ts": {d}}},
+        \\", "ph": "B", "pid": 0, "tid": 0, "ts": {d}}},
         \\
     ,
         .{
@@ -50,7 +50,7 @@ pub inline fn trace_begin(ctx: tracer.Ctx, comptime ifmt: []const u8, iargs: any
 pub inline fn trace_end(ctx: tracer.Ctx) void {
     _ = ctx;
     buffered_writer.writer().print(
-        \\{{"cat":"function", "ph": "E", "ts": {d}}},
+        \\{{"cat":"function", "ph": "E", "pid": 0, "tid": 0, "ts": {d}}},
         \\
     ,
         .{
