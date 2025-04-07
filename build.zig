@@ -27,7 +27,7 @@ fn addTest(
     comptime backend: u8,
 ) void {
     const options = b.addOptions();
-    options.addOption(usize, "src_file_trimlen", std.fs.path.dirname(std.fs.path.dirname(@src().file).?).?.len);
+    // options.addOption(usize, "src_file_trimlen", std.fs.path.dirname(std.fs.path.dirname(@src().file).?).?.len);
     options.addOption(u8, "backend", backend);
 
     const exe = b.addExecutable(.{

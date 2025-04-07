@@ -1,6 +1,7 @@
 .{
-    .name = "zig-tracer",
+    .name = .tracer,
     .version = "0.1.0",
+    .fingerprint = 0x81b9ecb1e7b0a303,
     .paths = .{
         "src",
         "build.zig",
