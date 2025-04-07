@@ -4,24 +4,16 @@ const alloc = std.heap.c_allocator;
 const log = std.log.scoped(.racer);
 const root = @import("root");
 
-var pid: std.os.linux.pid_t = undefined;
-threadlocal var tid: std.os.linux.pid_t = undefined;
 threadlocal var path: []const u8 = undefined;
 threadlocal var file: std.fs.File = undefined;
 threadlocal var buffered_writer: std.io.BufferedWriter(4096, std.fs.File.Writer) = undefined;
 
-pub fn init() !void {
-    pid = std.os.linux.getpid();
-}
+pub fn init() !void {}
 
-pub fn deinit() void {
-    //
-}
+pub fn deinit() void {}
 
 pub fn init_thread(dir: std.fs.Dir) !void {
-    tid = std.os.linux.gettid();
-
-    path = try std.fmt.allocPrint(alloc, "trace.{d}.{d}.chrome.json", .{ pid, tid });
+    path = try std.fmt.allocPrint(alloc, "trace.chrome.json", .{});
     file = try dir.createFile(path, .{});
     buffered_writer = std.io.bufferedWriter(file.writer());
 
@@ -41,7 +33,7 @@ pub inline fn trace_begin(ctx: tracer.Ctx, comptime ifmt: []const u8, iargs: any
     buffered_writer.writer().print(
         \\{{"cat":"function", "name":"{s}:{d}:{d} ({s})
     ++ ifmt ++
-        \\", "ph": "B", "pid": {d}, "tid": {d}, "ts": {d}}},
+        \\", "ph": "B", "ts": {d}}},
         \\
     ,
         .{
@@ -50,8 +42,6 @@ pub inline fn trace_begin(ctx: tracer.Ctx, comptime ifmt: []const u8, iargs: any
             ctx.src.column,
             ctx.src.fn_name,
         } ++ iargs ++ .{
-            pid,
-            tid,
             std.time.microTimestamp(),
         },
     ) catch {};
@@ -60,12 +50,10 @@ pub inline fn trace_begin(ctx: tracer.Ctx, comptime ifmt: []const u8, iargs: any
 pub inline fn trace_end(ctx: tracer.Ctx) void {
     _ = ctx;
     buffered_writer.writer().print(
-        \\{{"cat":"function", "ph": "E", "pid": {d}, "tid": {d}, "ts": {d}}},
+        \\{{"cat":"function", "ph": "E", "ts": {d}}},
         \\
     ,
         .{
-            pid,
-            tid,
             std.time.microTimestamp(),
         },
     ) catch {};
